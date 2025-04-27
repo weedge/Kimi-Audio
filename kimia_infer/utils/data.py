@@ -10,6 +10,17 @@ class KimiAContent:
         self.is_continuous_mask: list[int] = is_continuous_mask or []
 
         self.continuous_feature = []
+    
+    def __str__(self):
+        s = ""
+        s += f"audio_token_ids({len(self.audio_token_ids)}): {self.audio_token_ids}\n"
+        s += f"text_token_ids({len(self.text_token_ids)}): {self.text_token_ids}\n"
+        s += f"is_continuous_mask({len(self.is_continuous_mask)}): {self.is_continuous_mask}\n"
+        s += f"continuous_feature({len(self.continuous_feature)}):\n"
+        for i,feature in enumerate(self.continuous_feature):
+            s += f"continuous_feature[{i}]: {feature.shape}\n"
+
+        return s
 
     def audio_append(self, index: int, is_continuous: bool = False):
         self.audio_token_ids.append(index)
