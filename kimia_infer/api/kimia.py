@@ -47,6 +47,7 @@ class KimiAudio(object):
         self.kimia_text_audiodelaytokens = 6
         self.eod_ids = [self.extra_tokens.msg_end, self.extra_tokens.media_end]
 
+    @torch.inference_mode()
     def _generate_loop(
         self,
         audio_input_ids: torch.Tensor,  # input audio tokens
@@ -112,7 +113,7 @@ class KimiAudio(object):
             print(f"{i} decoder_input_audio_ids",decoder_input_audio_ids)
             print(f"{i} decoder_input_text_ids",decoder_input_text_ids)
             print(f"{i} decoder_input_whisper_feature",decoder_input_whisper_feature)
-            print(f"{i} decoder_is_continuous_mask",is_continuous_mask)
+            print(f"{i} decoder_is_continuous_mask",decoder_is_continuous_mask)
             print(f"{i} decoder_position_ids",decoder_position_ids)
             print(f"{i} past_key_values",past_key_values)
             # https://huggingface.co/moonshotai/Kimi-Audio-7B-Instruct/blob/main/modeling_moonshot_kimia.py#L850
@@ -216,6 +217,7 @@ class KimiAudio(object):
         )
         return return_audio_tokens, return_text_tokens
 
+    @torch.inference_mode()
     def generate(
         self,
         chats: list[dict],
