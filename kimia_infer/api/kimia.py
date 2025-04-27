@@ -109,6 +109,12 @@ class KimiAudio(object):
         for i in tqdm.tqdm(
             range(max_new_tokens), desc="Generating tokens", disable=False
         ):
+            print(f"{i} decoder_input_audio_ids",decoder_input_audio_ids)
+            print(f"{i} decoder_input_text_ids",decoder_input_text_ids)
+            print(f"{i} decoder_input_whisper_feature",decoder_input_whisper_feature)
+            print(f"{i} decoder_is_continuous_mask",is_continuous_mask)
+            print(f"{i} decoder_position_ids",decoder_position_ids)
+            print(f"{i} past_key_values",past_key_values)
             # https://huggingface.co/moonshotai/Kimi-Audio-7B-Instruct/blob/main/modeling_moonshot_kimia.py#L850
             audio_logits, text_logits, past_key_values = self.alm.forward(
                 input_ids=decoder_input_audio_ids,
@@ -124,11 +130,13 @@ class KimiAudio(object):
             next_token_text = sampler.sample_text_logits(
                 text_logits, recent_tokens=text_previous_tokens[:i] if i > 0 else None
             )
+            print(f"{i} next_token_text",next_token_text)
 
             # Sample audio token using the sampler
             next_audio_token = sampler.sample_audio_logits(
                 audio_logits, recent_tokens=previous_audio_tokens[:i] if i > 0 else None
             )
+            print(f"{i} next_audio_token",next_audio_token)
 
             if text_stream_is_finished:
                 next_token_text.fill_(self.extra_tokens.kimia_text_blank)
@@ -151,6 +159,9 @@ class KimiAudio(object):
 
             audio_stream_is_finished = next_audio_token.item() in self.eod_ids
 
+            print(f"{i} valid_text_length",valid_text_length)
+            print(f"{i} previous_text_tokens",text_previous_tokens)
+            print(f"{i} previous_audio_tokens",previous_audio_tokens)
             if (
                 output_type == "text"
                 and text_stream_is_finished
