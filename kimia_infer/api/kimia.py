@@ -229,7 +229,7 @@ class KimiAudio(object):
 
         audio_input_ids, text_input_ids, is_continuous_mask = history.to_tensor()
         audio_features = history.continuous_feature
-        print(audio_input_ids.shape, text_input_ids.shape, is_continuous_mask.shape, len(audio_features),audio_features[0].shape)
+        print("input_token_ids:",audio_input_ids.shape, text_input_ids.shape, is_continuous_mask.shape, len(audio_features),audio_features[0].shape)
 
         generated_wav_tokens = []
         generated_text_tokens = []
@@ -261,7 +261,7 @@ class KimiAudio(object):
             continous_feature=audio_features,
             output_type=output_type,
         )
-        print(generated_text_tokens,generated_wav_tokens)
+        print("generated_token_ids:",generated_text_tokens,generated_wav_tokens)
 
         generated_wav_tokens = [
             t for t in generated_wav_tokens if t >= self.kimia_token_offset
