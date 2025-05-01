@@ -108,9 +108,7 @@ class KimiAudio(object):
         valid_text_length = 0
         valid_audio_length = 0
 
-        for i in tqdm.tqdm(
-            range(max_new_tokens), desc="Generating tokens", disable=False
-        ):
+        for i in tqdm.tqdm(range(max_new_tokens), desc="Generating tokens"):
             print(f"{i} decoder_input_audio_ids",decoder_input_audio_ids)
             print(f"{i} decoder_input_text_ids",decoder_input_text_ids)
             print(f"{i} decoder_input_whisper_feature",decoder_input_whisper_feature)
