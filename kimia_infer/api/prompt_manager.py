@@ -108,7 +108,7 @@ class KimiAPromptManager:
             )
 
         elif message["message_type"] == "audio":
-            audio_wav = message["content"] # audio_path or audio_tensor
+            audio_wav = message["content"] # audio_path or audio_tensor (1, T)
             if isinstance(audio_wav, str):
                 speech_tokens = self._tokenize_audio(audio_wav)
             else:
@@ -131,7 +131,7 @@ class KimiAPromptManager:
                 kimia_content_msg.text_append(self.extra_tokens.kimia_text_blank)
 
             if extract_whisper_feature:
-                whisper_feature = self.extract_whisper_feat(audio_path)
+                whisper_feature = self.extract_whisper_feat(audio_wav)
                 kimia_content_msg.continuous_feature.append(whisper_feature)
         elif message["message_type"] == None:
             pass
