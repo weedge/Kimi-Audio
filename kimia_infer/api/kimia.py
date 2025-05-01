@@ -99,7 +99,7 @@ class KimiAudio(object):
             .unsqueeze(0)
             .long()
         )
-        decoder_input_whisper_feature = continous_feature
+        decoder_input_whisper_feature = continous_feature or None
         decoder_is_continuous_mask = is_continuous_mask
         past_key_values = None
 
