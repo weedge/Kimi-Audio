@@ -1,27 +1,19 @@
+from dataclasses import dataclass, field
+
 import torch
 
 
+@dataclass
 class KimiASampler:
-    def __init__(
-        self,
-        audio_top_k: int,
-        audio_temperature: float,
-        audio_repetition_penalty: float,
-        audio_repetition_window_size: int,
-        text_top_k: int,
-        text_temperature: float,
-        text_repetition_penalty: float,
-        text_repetition_window_size: int,
-    ):
-        self.audio_top_k = audio_top_k
-        self.audio_temperature = audio_temperature
-        self.text_top_k = text_top_k
-        self.text_temperature = text_temperature
 
-        self.audio_repetition_penalty = audio_repetition_penalty
-        self.audio_repetition_window_size = audio_repetition_window_size
-        self.text_repetition_penalty = text_repetition_penalty
-        self.text_repetition_window_size = text_repetition_window_size
+    audio_top_k: int = 5
+    audio_temperature: float = 0.0
+    audio_repetition_penalty: float = 1.0
+    audio_repetition_window_size: int = 64
+    text_top_k: int = 5
+    text_temperature: float = 0.0
+    text_repetition_penalty: float = 1.0
+    text_repetition_window_size: int = 16
 
     def sample_audio_logits(
         self, logits: torch.Tensor, recent_tokens=None
