@@ -109,11 +109,6 @@ class KimiAudio(object):
         valid_audio_length = 0
 
         for i in tqdm.tqdm(range(max_new_tokens), desc="Generating tokens"):
-            print(f"{i} decoder_input_audio_ids",decoder_input_audio_ids)
-            print(f"{i} decoder_input_text_ids",decoder_input_text_ids)
-            print(f"{i} decoder_input_whisper_feature",decoder_input_whisper_feature)
-            print(f"{i} decoder_is_continuous_mask",decoder_is_continuous_mask)
-            print(f"{i} decoder_position_ids",decoder_position_ids)
             # https://huggingface.co/moonshotai/Kimi-Audio-7B-Instruct/blob/main/modeling_moonshot_kimia.py#L850
             audio_logits, text_logits, past_key_values = self.alm.forward(
                 input_ids=decoder_input_audio_ids,
@@ -129,7 +124,6 @@ class KimiAudio(object):
             next_token_text = sampler.sample_text_logits(
                 text_logits, recent_tokens=text_previous_tokens[:i] if i > 0 else None
             )
-            print(f"{i} next_token_text",next_token_text)
 
             # Sample audio token using the sampler
             next_audio_token = sampler.sample_audio_logits(
@@ -153,16 +147,10 @@ class KimiAudio(object):
                 else:
                     valid_audio_length += 1
 
-            print(f"{i} next_audio_token",next_audio_token)
-
             previous_audio_tokens[i : i + 1] = next_audio_token
 
             audio_stream_is_finished = next_audio_token.item() in self.eod_ids
 
-            print(f"{i} valid_text_length",valid_text_length)
-            print(f"{i} valid_audio_length",valid_audio_length)
-            print(f"{i} previous_text_tokens",text_previous_tokens)
-            print(f"{i} previous_audio_tokens",previous_audio_tokens)
             if (
                 output_type == "text"
                 and text_stream_is_finished
@@ -242,7 +230,6 @@ class KimiAudio(object):
 
         audio_input_ids, text_input_ids, is_continuous_mask = history.to_tensor()
         audio_features = history.continuous_feature
-        print("input_token_ids:",audio_input_ids.shape, text_input_ids.shape, is_continuous_mask.shape, len(audio_features),audio_features[0].shape)
 
         generated_wav_tokens = []
         generated_text_tokens = []
@@ -274,8 +261,6 @@ class KimiAudio(object):
             continous_feature=audio_features,
             output_type=output_type,
         )
-        print("generated_token_ids:",generated_text_tokens,generated_wav_tokens)
-
         generated_wav_tokens = [
             t for t in generated_wav_tokens if t >= self.kimia_token_offset
         ]  #  filter out the illegal tokens
