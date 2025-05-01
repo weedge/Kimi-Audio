@@ -48,6 +48,12 @@ class KimiAPromptManager:
         wav_tokens_list = wav_tokens.squeeze(0).cpu().numpy().tolist()
         return wav_tokens_list
 
+    def _tokenize_audio_from_wav(self, speech: torch.Tensor): 
+        wav_tokens = self.audio_tokenizer.tokenize(speech=speech)
+        wav_tokens = wav_tokens + self.kimia_token_offset
+        wav_tokens_list = wav_tokens.squeeze(0).cpu().numpy().tolist()
+        return wav_tokens_list
+
     def extract_whisper_feat(self, wav: torch.Tensor | str):
         if isinstance(wav, str):
             wav = librosa.load(wav, sr=16000)[0]
@@ -102,8 +108,11 @@ class KimiAPromptManager:
             )
 
         elif message["message_type"] == "audio":
-            audio_path = message["content"]
-            speech_tokens = self._tokenize_audio(audio_path)
+            audio_wav = message["content"] # audio_path or audio_tensor
+            if isinstance(audio_wav, str):
+                speech_tokens = self._tokenize_audio(audio_wav)
+            else:
+                speech_tokens = self._tokenize_audio_from_wav(audio_wav)
 
             kimia_content_msg.audio_append(self.extra_tokens.media_begin)
             kimia_content_msg.audio_extend(speech_tokens, is_continuous=True)
