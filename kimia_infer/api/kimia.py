@@ -137,7 +137,6 @@ class KimiAudio(object):
             next_audio_token = sampler.sample_audio_logits(
                 audio_logits, recent_tokens=previous_audio_tokens[:i] if i > 0 else None
             )
-            print(f"{i} next_audio_token",next_audio_token)
 
             if text_stream_is_finished:
                 next_token_text.fill_(self.extra_tokens.kimia_text_blank)
@@ -156,11 +155,14 @@ class KimiAudio(object):
                 else:
                     valid_audio_length += 1
 
+            print(f"{i} next_audio_token",next_audio_token)
+
             previous_audio_tokens[i : i + 1] = next_audio_token
 
             audio_stream_is_finished = next_audio_token.item() in self.eod_ids
 
             print(f"{i} valid_text_length",valid_text_length)
+            print(f"{i} valid_audio_length",valid_audio_length)
             print(f"{i} previous_text_tokens",text_previous_tokens)
             print(f"{i} previous_audio_tokens",previous_audio_tokens)
             if (
