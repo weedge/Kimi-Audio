@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 import tqdm
 import torch
@@ -63,7 +64,7 @@ class KimiAudio(object):
         text_repetition_penalty: float = 1.0,
         text_repetition_window_size: int = 16,
         is_continuous_mask: torch.Tensor = None,
-        continous_feature: torch.Tensor = None,
+        continous_feature: List[torch.Tensor] = [],
         output_type: str = "text",
     ):
 
