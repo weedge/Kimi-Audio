@@ -23,7 +23,7 @@ def load():
         cc_flag.append("arch=compute_80,code=sm_80")
 
     # Build path
-    srcpath = pathlib.Path(__file__).parent.absolute()
+    srcpath = os.getenv("ALIAS_FREE_ACTIVATION_CUDA_SRC_PATH", pathlib.Path(__file__).parent.absolute())
     buildpath = srcpath / "build"
     _create_build_dir(buildpath)
 
