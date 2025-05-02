@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -107,10 +108,10 @@ def mel_filters(device, n_mels: int = 128) -> torch.Tensor:
             mel_80=librosa.filters.mel(sr=16000, n_fft=400, n_mels=80),
         )
     """
-    with np.load(
-        os.path.join(os.path.dirname(__file__), "mel_filters.npz")  # todo
-        # os.path.join("assets", "mel_filters.npz")
-    ) as f:
+    default_path = os.path.join(os.path.dirname(__file__), "mel_filters.npz")
+    mel_filters_path = os.getenv("MEL_FILTERS_PATH", default_path)
+    with np.load( mel_filters_path) as f:
+        logging.info(f"Loading mel filters from {mel_filters_path}")
         return torch.from_numpy(f[f"mel_{n_mels}"]).to(device)
 
 
